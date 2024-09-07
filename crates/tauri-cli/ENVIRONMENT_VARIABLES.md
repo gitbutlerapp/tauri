@@ -37,6 +37,7 @@ These environment variables are inputs to the CLI which may have an equivalent C
 - `TAURI_WEBVIEW_AUTOMATION` — Enables webview automation (Linux Only).
 - `TAURI_ANDROID_PROJECT_PATH` — Path of the tauri android project, usually will be `<project>/src-tauri/gen/android`.
 - `TAURI_IOS_PROJECT_PATH` — Path of the tauri iOS project, usually will be `<project>/src-tauri/gen/ios`.
+- `V1_COMPATIBLE_BIN_NAME` — If set, the CLI will rename the main app binary to the `productName`, as it did in Tauri v1. This is useful for allowing users of a Tauri v1 app to update the app to a v2 version via the updater.
 
 ### Tauri CLI Hook Commands
 
