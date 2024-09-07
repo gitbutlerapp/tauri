@@ -23,7 +23,7 @@
 // files into the `Contents` directory of the bundle.
 
 use super::{
-  super::common::{self, CommandExt},
+  super::common::{self, rename_app, use_v1_bin_name, CommandExt},
   icon::create_icns_file,
   sign::{notarize, notarize_auth, sign, NotarizeAuthError, SignTarget},
 };
@@ -159,6 +159,9 @@ fn copy_binaries_to_bundle(
     let dest_path = dest_dir.join(bin.name());
     common::copy_file(&bin_path, &dest_path)
       .with_context(|| format!("Failed to copy binary from {:?}", bin_path))?;
+    if use_v1_bin_name() && bin.name() == settings.main_binary_name() {
+      rename_app(settings.target(), &dest_path, settings.product_name())?;
+    }
     paths.push(dest_path);
   }
   Ok(paths)
@@ -200,7 +203,12 @@ fn create_info_plist(
   plist.insert("CFBundleDisplayName".into(), settings.product_name().into());
   plist.insert(
     "CFBundleExecutable".into(),
-    settings.main_binary_name().into(),
+    if use_v1_bin_name() {
+      settings.product_name()
+    } else {
+      settings.main_binary_name()
+    }
+    .into(),
   );
   if let Some(path) = bundle_icon_file {
     plist.insert(
